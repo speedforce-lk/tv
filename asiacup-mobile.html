@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+          margin: 0;
+          padding: 0;
+          background-color: black;
+          overflow: hidden; /* Prevent scrollbars on PC browsers */
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+        }
+
+        #player {
+          width: 100%;
+          max-width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          object-fit: contain;
+        }
+
+        @media screen and (max-width: 768px) {
+            #player {
+                height: 100vh; /* Adjusted for mobile browsers */
+                position: relative; /* Keep it centered */
+                max-height: 100vh;
+            }
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/gh/clappr/clappr@latest/dist/clappr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/clappr/dash-shaka-playback@latest/dist/dash-shaka-playback.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/clappr/clappr-level-selector-plugin@latest/dist/level-selector.min.js"></script>
+</head>
+<body>
+    <div id="player"></div>
+    <script type="text/javascript">
+        const kid = 'ac8e0dd8ea8fdc9dc52e6856c0eaf9ba';
+        const key = '054d6605a69ac6684b82cf7d04d3ec16';
+        const options = {
+            source: "https://bpcdn.dialog.lk/bpk-tv/Ch201/output/index.mpd",
+            plugins: [DashShakaPlayback, LevelSelector],
+            shakaConfiguration: {
+                drm: {
+                    clearKeys: {
+                        [kid]: key
+                    }
+                },
+                streaming: {
+                    lowLatencyMode: true,
+                    inaccurateManifestTolerance: 0,
+                    rebufferingGoal: 0.01,
+                    segmentPrefetchLimit: 2,
+                }
+            },
+            levelSelectorConfig: {
+                title: 'Quality',
+                labelCallback: function (playbackLevel, customLabel) {
+                    return customLabel + playbackLevel.level.height + 'p'; // High 720p
+                }
+            },
+            parentId: "#player",
+        }
+        let player = new Clappr.Player(options);
+    </script>
+</body>
+</html>
